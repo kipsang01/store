@@ -57,6 +57,14 @@ jobs:
         echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/test_db" >> $GITHUB_ENV
         echo "REDIS_URL=redis://localhost:6379/0" >> $GITHUB_ENV
         echo "ALLOWED_HOSTS=*" >> $GITHUB_ENV
+        echo "GOOGLE_OAUTH2_CLIENT_ID=test_client_id" >> $GITHUB_ENV
+        echo "GOOGLE_OAUTH2_CLIENT_SECRET=test_client_secret" >> $GITHUB_ENV
+        echo "AFRICAS_TALKING_SENDER_ID=test_sender_id" >> $GITHUB_ENV
+        echo "AFRICAS_TALKING_API_KEY=test_api_key" >> $GITHUB_ENV
+        echo "AFRICAS_TALKING_USERNAME=test_username" >> $GITHUB_ENV
+        echo "ADMIN_EMAIL=test_admin_email" >> $GITHUB_ENV
+        echo "EMAIL_HOST_USER=test_email_host_user" >> $GITHUB_ENV
+        echo "EMAIL_HOST_PASSWORD=test_email_host_password" >> $GITHUB_ENV
         
 
     - name: Run migrations
