@@ -56,6 +56,8 @@ jobs:
         echo "DEBUG=True" >> $GITHUB_ENV
         echo "DATABASE_URL=postgresql://postgres:postgres@localhost:5432/test_db" >> $GITHUB_ENV
         echo "REDIS_URL=redis://localhost:6379/0" >> $GITHUB_ENV
+        echo "ALLOWED_HOSTS=*" >> $GITHUB_ENV
+        
 
     - name: Run migrations
       run: |
