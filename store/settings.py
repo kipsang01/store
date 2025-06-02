@@ -5,7 +5,6 @@ from pathlib import Path
 import environ
 
 env = environ.Env(
-    # set casting, default value
     DEBUG=(bool, False)
 )
 
@@ -29,7 +28,7 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework_simplejwt',
-    # 'rest_framework_simplejwt.token_blacklist',
+    'rest_framework_simplejwt.token_blacklist',
 
     'apps.authentication',
     'apps.customers',
@@ -41,7 +40,6 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    # 'corsheaders.middleware.CorsMiddleware',  # if you need CORS
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -51,7 +49,6 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'store.urls'
 
-# REST Framework configuration
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
@@ -66,7 +63,6 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 20
 }
 
-# JWT Settings
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
@@ -90,7 +86,6 @@ SIMPLE_JWT = {
     'JTI_CLAIM': 'jti',
 }
 
-# Google OAuth2 settings
 GOOGLE_OAUTH2_CLIENT_ID = env('GOOGLE_OAUTH2_CLIENT_ID')
 GOOGLE_OAUTH2_CLIENT_SECRET = env('GOOGLE_OAUTH2_CLIENT_SECRET')
 
@@ -156,3 +151,17 @@ USE_TZ = True
 STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+AFRICAS_TALKING_USERNAME = env('AFRICAS_TALKING_USERNAME')
+AFRICAS_TALKING_API_KEY = env('AFRICAS_TALKING_API_KEY')
+AFRICAS_TALKING_SENDER_ID = env('AFRICAS_TALKING_SENDER_ID')
+
+EMAIL_BACKEND = env('EMAIL_BACKEND', default='django.core.mail.backends.smtp.EmailBackend')
+EMAIL_HOST = env('EMAIL_HOST')
+EMAIL_PORT = env('EMAIL_PORT', default=587)
+EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', default=False)
+EMAIL_HOST_USER = env('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD')
+ADMIN_EMAIL = env('ADMIN_EMAIL')
+DEFAULT_FROM_EMAIL = env('DEFAULT_FROM_EMAIL', default=EMAIL_HOST_USER)
