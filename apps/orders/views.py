@@ -53,14 +53,31 @@ class OrderViewSet(viewsets.ModelViewSet):
     def send_notification(self, order):
         """Send SMS and email notifications"""
         try:
-            send_sms_notification(
-                phone=order.customer.phone,
-                message=f"Order #{order.id} confirmed! Total: ${order.total_amount}"
-            )
-            send_admin_email(
-                subject=f"New Order #{order.id}",
-                order=order
-            )
+            order_summary = f"Order #{order.id} confirmed! Total:{order.total_amount}"
+            message = (f"Hello {self.request.user.username}, Your Order {order_summary}"
+                       f" has been received please be patient while it's being processed")
+
+            send_sms_notification(order.customer.phone, message)
+
+            email_body = f"""
+                    New Order Placed!
+
+                    Order ID: #{order.id}
+                    Customer: {order.customer.user.first_name} {order.customer.user.last_name}
+                    Email: {order.customer.user.email}
+                    Phone: {order.customer.phone}
+                    Total Amount: ${order.total_amount}
+                    Order Date: {order.order_date}
+
+                    Items:
+                    """
+
+            for item in order.items.all():
+                email_body += f"- {item.quantity}x {item.product.name} @ ${item.unit_price} = ${item.total_price}\n"
+
+            if order.notes:
+                email_body += f"\nNotes: {order.notes}"
+            send_admin_email(f"New Order #{order.id}", email_body)
         except Exception as e:
             print(f"Notification error: {e}")
 
@@ -82,8 +99,8 @@ class OrderViewSet(viewsets.ModelViewSet):
         if new_status in ['shipped', 'delivered']:
             try:
                 send_sms_notification(
-                    phone=order.customer.phone,
-                    message=f"Order #{order.id} status updated: {new_status.title()}"
+                    order.customer.phone,
+                   f"Order #{order.id} status updated: {new_status.title()}"
                 )
             except Exception as e:
                 print(f"SMS notification error: {e}")

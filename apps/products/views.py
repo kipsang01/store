@@ -18,7 +18,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
         serializer = self.get_serializer(categories, many=True)
         return Response(serializer.data)
 
-    @action(detail=True, methods=['get'])
+    @action(detail=True, methods=['get'], url_path='average-price')
     def average_price(self, request, pk=None):
         """Get average product price for a category and its subcategories"""
         self.queryset = Category.objects.all()
