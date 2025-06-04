@@ -1,6 +1,9 @@
 from django.urls import path
-from . import views
+
+from apps.customers.views import CustomerViewSet
 
 app_name = 'customers'
 
-urlpatterns = []
+urlpatterns = [
+    path('', CustomerViewSet.as_view({'get': 'list'}), name='customer'),
+    ]
