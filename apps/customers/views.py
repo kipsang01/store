@@ -5,5 +5,13 @@ from apps.customers.serializers import CustomerSerializer
 
 
 class CustomerViewSet(viewsets.ModelViewSet):
-    queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
+    pagination_class = None
+
+    def get_queryset(self):
+        queryset = Customer.objects.all()
+        if self.request.user.is_authenticated:
+            queryset = queryset.filter(user=self.request.user)
+        return queryset
+
+

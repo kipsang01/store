@@ -8,13 +8,14 @@ from apps.products.serializers import ProductSerializer, ProductCreateSerializer
 
 
 class CategoryViewSet(viewsets.ModelViewSet):
-    queryset = Category.objects.filter(parent=None)
+    queryset = Category.objects.filter(parent=None).order_by('-id')
     serializer_class = CategorySerializer
+    permission_classes = []
 
     @action(detail=False, methods=['get'])
     def all_categories(self, request):
         """Get all categories including nested ones"""
-        categories = Category.objects.all()
+        categories = Category.objects.all().order_by('-id')
         serializer = self.get_serializer(categories, many=True)
         return Response(serializer.data)
 
@@ -51,6 +52,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.filter(is_active=True)
+    permission_classes = []
 
     def get_serializer_class(self):
         if self.action == 'create':

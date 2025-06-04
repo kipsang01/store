@@ -17,7 +17,7 @@ class OrderViewSet(viewsets.ModelViewSet):
         return OrderSerializer
 
     def get_queryset(self):
-        queryset = Order.objects.select_related('customer').prefetch_related('items__product')
+        queryset = Order.objects.select_related('customer').prefetch_related('items__product').order_by('-id')
         if self.request.user.is_authenticated:
             queryset = queryset.filter(customer__user=self.request.user)
         return queryset

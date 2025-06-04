@@ -53,9 +53,9 @@ def google_auth(request):
         )
 
 @api_view(['GET'])
-def me(request):
+def profile(request):
     """
-    Get current user info (requires authentication)
+    Get current user info.
     """
     user = request.user
     return Response({
