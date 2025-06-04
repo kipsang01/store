@@ -16,11 +16,11 @@ def send_sms_notification(phone_number, message):
     username = settings.AFRICAS_TALKING_USERNAME
     api_key = settings.AFRICAS_TALKING_API_KEY
     sender_id = settings.AFRICAS_TALKING_SENDER_ID
-    africastalking.initialize(username, api_key)
+    africastalking.initialize(username=username, api_key=api_key)
     sms = africastalking.SMS
 
     try:
         response = sms.send(message, [phone_number], sender_id=sender_id)
         return response
     except Exception as e:
-        return None
+       raise e

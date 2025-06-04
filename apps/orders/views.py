@@ -10,7 +10,6 @@ from utils.send_sms import send_sms_notification
 
 
 class OrderViewSet(viewsets.ModelViewSet):
-    queryset = Order.objects.all()
 
     def get_serializer_class(self):
         if self.action == 'create':
@@ -19,11 +18,8 @@ class OrderViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         queryset = Order.objects.select_related('customer').prefetch_related('items__product')
-        customer_id = self.request.query_params.get('customer', None)
-
-        if customer_id:
-            queryset = queryset.filter(customer_id=customer_id)
-
+        if self.request.user.is_authenticated:
+            queryset = queryset.filter(customer__user=self.request.user)
         return queryset
 
     @transaction.atomic
@@ -57,7 +53,8 @@ class OrderViewSet(viewsets.ModelViewSet):
             message = (f"Hello {self.request.user.username}, Your Order {order_summary}"
                        f" has been received please be patient while it's being processed")
 
-            send_sms_notification(order.customer.phone, message)
+            if order.customer.phone:
+                send_sms_notification(order.customer.phone, message)
 
             email_body = f"""
                     New Order Placed!
