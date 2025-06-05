@@ -1,0 +1,60 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service # Name of the Service, used by Django app to connect
+  namespace: store-app
+  labels:
+    app: postgres
+spec:
+  ports:
+    - port: 5432
+      name: postgresdb
+  clusterIP: None
+  selector:
+    app: postgres
+
+---
+# StatefulSet for deploying PostgreSQL
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: postgres
+  namespace: store-app
+  labels:
+    app: postgres
+spec:
+  serviceName: "postgres-service"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: postgres
+          image: postgres:17
+          imagePullPolicy: "IfNotPresent"
+          ports:
+            - containerPort: 5432
+              name: postgresdb
+          envFrom:
+            - configMapRef:
+                name: db-config # Reference to the postgres-config ConfigMap
+            - secretRef:
+                name: db-secrets # Reference to the postgres-secret Secret
+          volumeMounts:
+            - name: postgres-storage
+              mountPath: /var/lib/postgresql/data
+              subPath: postgres
+  volumeClaimTemplates:
+    - metadata:
+        name: postgres-storage
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 1Gi

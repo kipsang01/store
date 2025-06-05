@@ -1,0 +1,32 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: store-config
+  namespace: store-app
+data:
+  DJANGO_SETTINGS_MODULE: "store.settings"
+  DEBUG: "0"
+  ALLOWED_HOSTS: "*"
+  DB_HOST: "postgres-service"
+  DB_PORT: "5432"
+  DB_NAME: "store"
+  AFRICAS_TALKING_SENDER_ID: "3081"
+  ADMIN_EMAIL: <ADMIN_EMAIL>
+  EMAIL_HOST: "localhost"
+  EMAIL_PORT: "587"
+  EMAIL_USE_TLS: "False"
+  EMAIL_BACKEND: "django.core.mail.backends.console.EmailBackend"
+
+
+
+---
+# postgres-configs
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: db-config
+  namespace: store-app
+
+data:
+  DB_NAME: "store"
+  POSTGRES_DB: "store"

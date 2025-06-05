@@ -1,0 +1,59 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: store-app
+  namespace: store-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: store-app
+  template:
+    metadata:
+      labels:
+        app: store-app
+    spec:
+      containers:
+      - name: django
+        image: kipsang01/store:latest
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 8000
+        envFrom:
+          - secretRef:
+              name: store-secrets
+          - configMapRef:
+                name: store-config
+        livenessProbe:
+          httpGet:
+            path: /health-check/
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health-check/
+            port: 8000
+          initialDelaySeconds: 5
+          periodSeconds: 5
+        resources:
+          requests:
+            memory: "256Mi"
+            cpu: "250m"
+          limits:
+            memory: "512Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: store-service
+  namespace: store-app
+spec:
+  selector:
+    app: store-app
+  ports:
+  - port: 80
+    protocol: TCP
+    targetPort: 8000
+  type: LoadBalancer
