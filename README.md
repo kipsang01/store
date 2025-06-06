@@ -120,9 +120,20 @@ You can test the APIs using tools like Postman or cURL. The following endpoints 
 - `POST /api/orders/{id}/`: Updates an existing order by ID.
 - `DELETE /api/orders/{id}/`: Deletes an order by ID.
 ### 7. Running Tests
+1. Run tests
 ```bash
 python manage.py test
 ```
+2. Run integration tests
+```bash
+python manage.py test tests
+```
+3 Run tests with coverage
+```bash
+`coverage run --source='.' manage.py test`
+coverage report
+```
+
 ### 8. Notes
 - Ensure the requirements.txt file is included in the build context for Docker.
 - Update the Kubernetes deployment files to match your cluster configuration (e.g., image name, environment variables, and resource limits).
